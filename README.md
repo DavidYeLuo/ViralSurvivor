@@ -1,7 +1,7 @@
 # [TODO: Game Title]
 **Jam Theme:** [TODO: Jam Theme]  
 **Jam Schedule:** 8/22/25 to 8/24/25  
-**jam:** [link](https://itch.io/jam/mini-jame-gam-46)
+**jam:** [itch.io/jam/mini-jame-gam-46](https://itch.io/jam/mini-jame-gam-46)
 
 ## Game Description
 [TODO: Description of the game. What is it about? What's the core gameplay loop? What makes it unique or interesting on the jam theme?]
