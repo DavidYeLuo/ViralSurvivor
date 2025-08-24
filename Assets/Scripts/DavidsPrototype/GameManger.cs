@@ -9,8 +9,7 @@ namespace DavidsPrototype
         [SerializeField] private GameObject basicBulletPrefab;
 
         private PlayerInfo playerInfo;
-        private List<GameObject> zombies;
-        private List<Vector3> zombiesWishDirection;
+        private ZombieInfo zombieInfo;
         private Camera cam;
         private Vector3 cameraOffset;
         private List<GameObject> basicBullets;
@@ -19,8 +18,10 @@ namespace DavidsPrototype
 
         [SerializeField] private int activePlayers = 1;
         [SerializeField] private int maxPlayers = 2;
+        [SerializeField] private float playerBaseSpeed = 4.0f;
         [SerializeField] private int activeZombies = 0;
         [SerializeField] private int maxZombies = 64;
+        [SerializeField] private float zombieBaseSpeed = 1.0f;
         [SerializeField] private int activeBasicBullets = 0;
         [SerializeField] private int maxBasicBullets = 512;
 
@@ -34,12 +35,12 @@ namespace DavidsPrototype
                 playerInfo.gameObjects.Add(Instantiate(playerPrefab));
                 playerInfo.gameObjects[i].SetActive(false);
             }
-            zombies = new List<GameObject>(maxZombies);
-            zombiesWishDirection = new List<Vector3>(maxZombies);
+
+            zombieInfo = new ZombieInfo(activeZombies, maxZombies);
             for (int i = 0; i < maxZombies; i++)
             {
-                zombies.Add(Instantiate(zombiePrefab));
-                zombies[i].SetActive(false);
+                zombieInfo.gameObjects.Add(Instantiate(zombiePrefab));
+                zombieInfo.gameObjects[i].SetActive(false);
             }
             for (int i = 0; i < maxBasicBullets; i++)
             {
@@ -52,7 +53,7 @@ namespace DavidsPrototype
             }
             for (int i = 0; i < activeZombies; i++)
             {
-                zombies[i].SetActive(true);
+                zombieInfo.gameObjects[i].SetActive(true);
             }
             playerInfo.lefts[0] = KeyCode.A;
             playerInfo.rights[0] = KeyCode.D;
@@ -61,7 +62,9 @@ namespace DavidsPrototype
             playerInfo.fire[0] = KeyCode.J;
             cam = Camera.main;
             cameraOffset = cam.transform.position;
-            // TODO: Remove this
+
+            zombieInfo.baseMovementSpeed = zombieBaseSpeed;
+            playerInfo.baseMovementSpeed = playerBaseSpeed;
             playerInfo.weaponOffset[0] = new Vector3(0.0f, 0.0f, 1.0f);
         }
 
@@ -76,11 +79,11 @@ namespace DavidsPrototype
         }
         private void FixedUpdate()
         {
-            float speed = 3;
-            for (int i = 0; i < activePlayers; i++)
+            for (int i = 0; i < playerInfo.activePlayers; i++)
             {
                 Vector3 wishDirection = playerInfo.playersWishDirection[i].normalized;
-                playerInfo.gameObjects[i].transform.position += speed * Time.fixedDeltaTime * wishDirection;
+                // TODO: Change this to rigidbody so player can collide to walls properly (if we're adding walls in the future)
+                playerInfo.gameObjects[i].transform.position += (playerInfo.baseMovementSpeed + playerInfo.bonusSpeed[i]) * Time.fixedDeltaTime * wishDirection;
                 // This if statement fixes prevents player model to snap back to looking forward when player isn't pressing anything
                 if (wishDirection.sqrMagnitude > 0.1f)
                     playerInfo.gameObjects[i].transform.rotation = Quaternion.LookRotation(wishDirection);
@@ -89,18 +92,22 @@ namespace DavidsPrototype
                 {
                     GameObject bullet = basicBullets[activeBasicBullets];
                     Vector3 offset = playerInfo.playerHandOffset[i] + playerInfo.weaponOffset[i] + playerInfo.weaponShootOffset[i];
+                    // BUG: when shooting diagonally, the bullet comes out more toward the size compared to when the player is shooting straight
+                    // Janky way to place bullet to face where the player is
                     offset.x *= wishDirection.x;
                     offset.y *= wishDirection.y;
                     offset.z *= wishDirection.z;
+
                     bullet.transform.rotation = playerInfo.gameObjects[i].transform.rotation;
                     bullet.transform.position = playerInfo.gameObjects[i].transform.position + offset;
                     bullet.SetActive(true);
                     activeBasicBullets++;
                 }
             }
-            for (int i = 0; i < activeZombies; i++)
+            for (int i = 0; i < zombieInfo.activeZombies; i++)
             {
-                zombies[i].transform.position += speed * Time.fixedDeltaTime * zombiesWishDirection[i].normalized;
+                zombieInfo.wishDirections[i] = (playerInfo.gameObjects[0].transform.position - zombieInfo.gameObjects[i].transform.position).normalized;
+                zombieInfo.gameObjects[i].transform.position += (zombieInfo.baseMovementSpeed + zombieInfo.bonusSpeed[i]) * Time.fixedDeltaTime * zombieInfo.wishDirections[i].normalized;
             }
 
             for (int i = 0; i < activeBasicBullets; i++)

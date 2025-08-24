@@ -4,6 +4,9 @@ namespace DavidsPrototype
 {
     struct PlayerInfo
     {
+        public int activePlayers;
+        public int maxPlayers;
+
         public List<GameObject> gameObjects;
         public List<Vector3> playersWishDirection;
         public List<bool> playersWishToFire;
@@ -19,8 +22,14 @@ namespace DavidsPrototype
         public List<KeyCode> ups;
         public List<KeyCode> fire;
 
+        public float baseMovementSpeed;
+        public List<float> bonusSpeed;
+
         public PlayerInfo(int activePlayers, int maxPlayers)
         {
+            this.activePlayers = activePlayers;
+            this.maxPlayers = maxPlayers;
+
             gameObjects = new List<GameObject>(maxPlayers);
             playersWishDirection = new List<Vector3>(maxPlayers);
             playersWishToFire = new List<bool>(maxPlayers);
@@ -34,6 +43,9 @@ namespace DavidsPrototype
             downs = new List<KeyCode>(maxPlayers);
             ups = new List<KeyCode>(maxPlayers);
             fire = new List<KeyCode>(maxPlayers);
+
+            baseMovementSpeed = 1.0f;
+            bonusSpeed = new List<float>(maxPlayers);
 
             for (int i = 0; i < maxPlayers; i++)
             {
@@ -49,6 +61,8 @@ namespace DavidsPrototype
                 downs.Add(KeyCode.None);
                 ups.Add(KeyCode.None);
                 fire.Add(KeyCode.None);
+
+                bonusSpeed.Add(0.0f);
             }
         }
     }
