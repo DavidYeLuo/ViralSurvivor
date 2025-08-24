@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 namespace DavidsPrototype
 {
     public class GameManager : MonoBehaviour
@@ -7,9 +8,15 @@ namespace DavidsPrototype
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject zombiePrefab;
         [SerializeField] private GameObject basicBulletPrefab;
+        [SerializeField] private GameObject basicBalloonPrefab;
+        [SerializeField] private GameObject winUI;
+        [SerializeField] private GameObject loseUI;
+        [SerializeField] private TMP_Text balloonCounter;
+        [SerializeField] private TMP_Text playerHealthUI;
 
         private PlayerInfo playerInfo;
         private ZombieInfo zombieInfo;
+        private BalloonInfo balloonInfo;
         private Camera cam;
         private Vector3 cameraOffset;
         private List<GameObject> basicBullets;
@@ -31,6 +38,15 @@ namespace DavidsPrototype
         float bulletRadius = 0.5f;
         int enemyLayerMask = 1 << 3;
 
+        [SerializeField] private int activeBalloons;
+        [SerializeField] private int maxBalloons;
+        [SerializeField] private int numOfBalloonSpawnAtOnce;
+        [SerializeField] private float balloonWaveDuration;
+        [SerializeField] private float balloonSpawnRange;
+        [SerializeField] private float balloonYOffset;
+        [SerializeField] private int winWhenCollectedNBalloon = 2;
+        [SerializeField] private float balloonCollectionSqrRadius = 8.0f;
+
         [SerializeField] private int numOfZombiesSpawnAtOnce = 10; // n zombies spawns every waveDuration of seconds
         [SerializeField] private float waveDuration = 60.0f; // seconds
         [SerializeField] private float spawnRange = 10.0f;
@@ -41,8 +57,11 @@ namespace DavidsPrototype
         [SerializeField] private float gunCycleTime = 0.2f;
         float spread = 0f; // in degrees
 
+
         private void Start()
         {
+            winUI.SetActive(false);
+            loseUI.SetActive(false);
             playerInfo = new PlayerInfo(activePlayers, maxPlayers);
             basicBullets = new List<GameObject>(maxBasicBullets);
 
@@ -61,6 +80,17 @@ namespace DavidsPrototype
                 zombieInfo.gameObjects[i].GetComponent<ZombieInfoContainer>().index = i;
                 zombieInfo.gameObjects[i].SetActive(false);
                 zombieInfo.health.Add(zombieBaseHealth);
+            }
+            balloonInfo = new BalloonInfo(activeBalloons, maxBalloons);
+            balloonInfo.balloonWaveDuration = balloonWaveDuration;
+            balloonInfo.balloonSpawnRange = balloonSpawnRange;
+            balloonInfo.numOfBalloonSpawnAtOnce = this.numOfBalloonSpawnAtOnce;
+            balloonInfo.spawnYOffset = balloonYOffset;
+            balloonInfo.collectionSqrRadius = balloonCollectionSqrRadius;
+            for (int i = 0; i < maxBalloons; i++)
+            {
+                balloonInfo.gameObjects.Add(Instantiate(basicBalloonPrefab));
+                balloonInfo.gameObjects[i].SetActive(false);
             }
             for (int i = 0; i < maxBasicBullets; i++)
             {
@@ -86,6 +116,9 @@ namespace DavidsPrototype
             zombieInfo.baseMovementSpeed = zombieBaseSpeed;
             playerInfo.baseMovementSpeed = playerBaseSpeed;
             playerInfo.weaponOffset[0] = new Vector3(0.0f, 0.0f, 1.0f);
+
+            balloonCounter.text = "Balloons: 0";
+            playerHealthUI.text = "Health: " + playerInfo.health[0];
         }
 
         private void Update()
@@ -99,7 +132,6 @@ namespace DavidsPrototype
         }
         private void FixedUpdate()
         {
-
             for (int i = 0; i < playerInfo.activePlayers; i++)
             {
                 if (!playerInfo.gameObjects[i].activeSelf)
@@ -117,11 +149,14 @@ namespace DavidsPrototype
                         {
                             playerInfo.health[i] -= zombieBaseDamage;
                             print("player " + (i + 1) + " took " + zombieBaseDamage + " damage");
+                            playerHealthUI.text = "Health: " + playerInfo.health[0];
+
                             if (playerInfo.health[i] <= 0f)
                             {
                                 // the player is now dead, we should check if all active players are dead at this point
                                 // TODO: elaborate on death handling (e.g. if(everyone is dead){gameover;} )
                                 playerInfo.gameObjects[i].SetActive(false);
+                                loseUI.SetActive(true);
                             }
                             playerInfo.receiveDamageCooldown[i] = playerMaxDamageCooldown;
                             break;
@@ -171,6 +206,12 @@ namespace DavidsPrototype
                 // ^ v   replaced the movement mode so that zombies collide with each other
                 zombieInfo.gameObjects[i].GetComponent<Rigidbody>().velocity = (zombieInfo.baseMovementSpeed + zombieInfo.bonusSpeed[i]) * zombieInfo.wishDirections[i].normalized;
             }
+            if (balloonInfo.nextBalloonWaveSpawnInSeconds < 0.0f)
+            {
+                SpawnBalloonRandomly();
+                balloonInfo.nextBalloonWaveSpawnInSeconds = balloonInfo.balloonWaveDuration;
+            }
+            balloonInfo.nextBalloonWaveSpawnInSeconds -= Time.fixedDeltaTime;
 
             for (int i = 0; i < activeBasicBullets; i++)
             {
@@ -195,6 +236,27 @@ namespace DavidsPrototype
                     basicBullets[i].transform.position += basicBulletSpeed * Time.fixedDeltaTime * basicBullets[i].transform.forward;
                 }
             }
+
+            for (int i = 0; i < balloonInfo.activeBalloon; i++)
+            {
+                for (int playerIndex = 0; playerIndex < playerInfo.activePlayers; playerIndex++)
+                {
+                    if (Vector3.SqrMagnitude(playerInfo.gameObjects[playerIndex].transform.position - balloonInfo.gameObjects[i].transform.position) < balloonInfo.collectionSqrRadius)
+                    {
+                        balloonInfo.gameObjects[i].transform.position = balloonInfo.gameObjects[balloonInfo.activeBalloon - 1].transform.position;
+                        balloonInfo.gameObjects[balloonInfo.activeBalloon - 1].SetActive(false);
+                        playerInfo.balloonsCollected++;
+                        balloonInfo.activeBalloon--;
+                        balloonCounter.text = "Balloons: " + playerInfo.balloonsCollected;
+                        if (playerInfo.balloonsCollected == winWhenCollectedNBalloon)
+                        {
+                            // Player wins
+                            winUI.SetActive(true);
+                        }
+                        break;
+                    }
+                }
+            }
         }
         private void SpawnZombiesRandomly()
         {
@@ -213,6 +275,24 @@ namespace DavidsPrototype
                 // NOTE: spawnYOffset is there to prevent zombie being stuck between the ground
                 Vector3 randPosition = new Vector3(randX, zombieInfo.spawnYOffset, randY);
                 GameObject currentObject = zombieInfo.gameObjects[index];
+                currentObject.transform.position = randPosition;
+                currentObject.SetActive(true);
+            }
+        }
+        private void SpawnBalloonRandomly()
+        {
+            for (int i = 0; i < balloonInfo.numOfBalloonSpawnAtOnce; i++)
+            {
+                if (balloonInfo.activeBalloon >= balloonInfo.maxBalloon) break;
+                int index = balloonInfo.activeBalloon;
+                balloonInfo.activeBalloon++;
+
+                float angleRad = Random.Range(0.0f, 2 * Mathf.PI);
+                float randX = spawnRange * Mathf.Cos(angleRad) + cam.transform.position.x;
+                float randY = spawnRange * Mathf.Sin(angleRad) + cam.transform.position.z;
+                // NOTE: spawnYOffset is there to prevent balloon being stuck between the ground
+                Vector3 randPosition = new Vector3(randX, balloonInfo.spawnYOffset, randY);
+                GameObject currentObject = balloonInfo.gameObjects[index];
                 currentObject.transform.position = randPosition;
                 currentObject.SetActive(true);
             }

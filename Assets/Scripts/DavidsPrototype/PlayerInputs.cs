@@ -7,6 +7,8 @@ namespace DavidsPrototype
         public int activePlayers;
         public int maxPlayers;
 
+        public int balloonsCollected;
+
         public List<GameObject> gameObjects;
         public List<Vector3> playersWishDirection;
         public List<bool> playersWishToFire;
@@ -32,6 +34,8 @@ namespace DavidsPrototype
         {
             this.activePlayers = activePlayers;
             this.maxPlayers = maxPlayers;
+
+            balloonsCollected = 0;
 
             gameObjects = new List<GameObject>(maxPlayers);
             playersWishDirection = new List<Vector3>(maxPlayers);

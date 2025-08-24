@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1207386798410325050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1529597118672583391}
+  - component: {fileID: 3518936469489124287}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1529597118672583391
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207386798410325050}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3518936469489124287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207386798410325050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 404c4f2489b2c886ea4d6cf4695dea6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 3979221778643793900, guid: 80be258925309476d859bc71c2aef8e9, type: 3}
+  zombiePrefab: {fileID: 2971029486163275012, guid: 5d24bde5cd4a03a6aaf88e5fc083cfe8, type: 3}
+  basicBulletPrefab: {fileID: 383012508136495484, guid: 9a9b092e7d6f535109e64d21332bd9db, type: 3}
+  basicBalloonPrefab: {fileID: 9165248779486335602, guid: 6bc3d8adf8e6dfa4fb5820df1476620d, type: 3}
+  basicBulletSpeed: 15
+  basicBulletDamage: 3
+  activePlayers: 1
+  maxPlayers: 64
+  playerBaseSpeed: 4
+  playerBaseHealth: 10
+  activeZombies: 0
+  maxZombies: 512
+  zombieBaseSpeed: 1
+  zombieBaseHealth: 10
+  zombieBaseDamage: 2
+  activeBasicBullets: 0
+  maxBasicBullets: 512
+  activeBalloons: 0
+  maxBalloons: 32
+  numOfBalloonSpawnAtOnce: 1
+  balloonWaveDuration: 15
+  balloonSpawnRange: 10
+  balloonYOffset: 3.5
+  numOfZombiesSpawnAtOnce: 5
+  waveDuration: 5
+  spawnRange: 10
+  gunCycleTime: 0.2
