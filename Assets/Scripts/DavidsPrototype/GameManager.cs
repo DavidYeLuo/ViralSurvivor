@@ -121,7 +121,8 @@ namespace DavidsPrototype
             for (int i = 0; i < zombieInfo.activeZombies; i++)
             {
                 zombieInfo.wishDirections[i] = (playerInfo.gameObjects[0].transform.position - zombieInfo.gameObjects[i].transform.position).normalized;
-                zombieInfo.gameObjects[i].transform.position += (zombieInfo.baseMovementSpeed + zombieInfo.bonusSpeed[i]) * Time.fixedDeltaTime * zombieInfo.wishDirections[i].normalized;
+                // zombieInfo.gameObjects[i].transform.position += (zombieInfo.baseMovementSpeed + zombieInfo.bonusSpeed[i]) * Time.fixedDeltaTime * zombieInfo.wishDirections[i].normalized;
+                zombieInfo.gameObjects[i].GetComponent<Rigidbody>().velocity = (zombieInfo.baseMovementSpeed + zombieInfo.bonusSpeed[i]) * zombieInfo.wishDirections[i].normalized;
             }
 
             for (int i = 0; i < activeBasicBullets; i++)
