@@ -210,7 +210,8 @@ namespace DavidsPrototype
                 float angleRad = Random.Range(0.0f, 2 * Mathf.PI);
                 float randX = spawnRange * Mathf.Cos(angleRad) + cam.transform.position.x;
                 float randY = spawnRange * Mathf.Sin(angleRad) + cam.transform.position.z;
-                Vector3 randPosition = new Vector3(randX, 0.0f, randY);
+                // NOTE: spawnYOffset is there to prevent zombie being stuck between the ground
+                Vector3 randPosition = new Vector3(randX, zombieInfo.spawnYOffset, randY);
                 GameObject currentObject = zombieInfo.gameObjects[index];
                 currentObject.transform.position = randPosition;
                 currentObject.SetActive(true);

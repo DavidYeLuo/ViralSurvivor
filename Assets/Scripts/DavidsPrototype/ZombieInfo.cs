@@ -9,12 +9,14 @@ namespace DavidsPrototype
         public int activeZombies;
         public int maxZombies;
         public float baseMovementSpeed;
+        public float spawnYOffset;
         public List<GameObject> gameObjects;
         public List<Vector3> wishDirections;
         public List<float> health;
         public List<float> bonusSpeed;
         public ZombieInfo(int activeZombies, int maxZombies)
         {
+            spawnYOffset = 0.5f; // NOTE: this fixes the bug where the zombie is stuck between the ground
             baseMovementSpeed = 1.0f;
             this.activeZombies = activeZombies;
             this.maxZombies = maxZombies;
