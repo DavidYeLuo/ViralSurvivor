@@ -137,6 +137,7 @@ namespace DavidsPrototype
                         zombieInfo.gameObjects[indexOfCollidedZombie].SetActive(false);
                         zombieInfo.health[indexOfCollidedZombie] = zombieBaseHealth;
                     }
+                    basicBullets[i].SetActive(false);
                 }
                 else
                 {
