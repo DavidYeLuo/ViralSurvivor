@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Feature - Menu and HUD/Title Screen.unity
     guid: 1e8bb57ee202a4a369f2ca01da4203f7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Prototype.unity
     guid: f5c409047429a687086e2266c0252dfa
+  - enabled: 1
+    path: Assets/Scenes/Prototype_DARK.unity
+    guid: 6ce1c32b26db64f5fa208dc420bee9ec
   m_configObjects: {}
