@@ -10,6 +10,7 @@ namespace DavidsPrototype
         public List<GameObject> gameObjects;
         public List<Vector3> playersWishDirection;
         public List<bool> playersWishToFire;
+        public List<float> shotCooldowns;
 
         public List<Vector3> playerHandOffset;
         public List<Vector3> weaponOffset;
@@ -33,6 +34,7 @@ namespace DavidsPrototype
             gameObjects = new List<GameObject>(maxPlayers);
             playersWishDirection = new List<Vector3>(maxPlayers);
             playersWishToFire = new List<bool>(maxPlayers);
+            shotCooldowns = new List<float>(maxPlayers);
 
             playerHandOffset = new List<Vector3>(maxPlayers);
             weaponOffset = new List<Vector3>(maxPlayers);
@@ -51,6 +53,7 @@ namespace DavidsPrototype
             {
                 playersWishDirection.Add(Vector3.zero);
                 playersWishToFire.Add(false);
+                shotCooldowns.Add(0f);
 
                 playerHandOffset.Add(Vector3.zero);
                 weaponOffset.Add(Vector3.zero);

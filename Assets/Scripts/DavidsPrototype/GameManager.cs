@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 namespace DavidsPrototype
 {
-    public class GameManger : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject zombiePrefab;
@@ -24,6 +24,10 @@ namespace DavidsPrototype
         [SerializeField] private float zombieBaseSpeed = 1.0f;
         [SerializeField] private int activeBasicBullets = 0;
         [SerializeField] private int maxBasicBullets = 512;
+
+        [SerializeField] private float gunCycleTime = 0.2f;
+
+        float spread = 3f;
 
         private void Start()
         {
@@ -79,6 +83,7 @@ namespace DavidsPrototype
         }
         private void FixedUpdate()
         {
+
             for (int i = 0; i < playerInfo.activePlayers; i++)
             {
                 Vector3 wishDirection = playerInfo.playersWishDirection[i].normalized;
@@ -88,8 +93,10 @@ namespace DavidsPrototype
                 if (wishDirection.sqrMagnitude > 0.1f)
                     playerInfo.gameObjects[i].transform.rotation = Quaternion.LookRotation(wishDirection);
 
-                if (playerInfo.playersWishToFire[i])
+                playerInfo.shotCooldowns[0] = playerInfo.shotCooldowns[0] < 0f ? 0f : playerInfo.shotCooldowns[0] - Time.fixedDeltaTime;
+                if (playerInfo.playersWishToFire[i] && playerInfo.shotCooldowns[0] <= 0f)
                 {
+                    playerInfo.shotCooldowns[0] = gunCycleTime;
                     GameObject bullet = basicBullets[activeBasicBullets];
                     Vector3 offset = playerInfo.playerHandOffset[i] + playerInfo.weaponOffset[i] + playerInfo.weaponShootOffset[i];
                     // BUG: when shooting diagonally, the bullet comes out more toward the size compared to when the player is shooting straight
@@ -99,6 +106,7 @@ namespace DavidsPrototype
                     offset.z *= wishDirection.z;
 
                     bullet.transform.rotation = playerInfo.gameObjects[i].transform.rotation;
+                    bullet.transform.Rotate(0f, Random.Range(0f, 1f) * spread, 0f);
                     bullet.transform.position = playerInfo.gameObjects[i].transform.position + offset;
                     bullet.SetActive(true);
                     activeBasicBullets++;
