@@ -15,6 +15,7 @@ namespace DavidsPrototype
         private List<GameObject> basicBullets;
 
         [SerializeField] private float basicBulletSpeed = 1.0f;
+        [SerializeField] private float basicBulletDamage = 3f;
 
         [SerializeField] private int activePlayers = 1;
         [SerializeField] private int maxPlayers = 2;
@@ -22,12 +23,15 @@ namespace DavidsPrototype
         [SerializeField] private int activeZombies = 0;
         [SerializeField] private int maxZombies = 64;
         [SerializeField] private float zombieBaseSpeed = 1.0f;
+        [SerializeField] private float zombieBaseHealth = 10.0f;
         [SerializeField] private int activeBasicBullets = 0;
         [SerializeField] private int maxBasicBullets = 512;
+        float bulletRadius = 0.5f;
+        int enemyLayerMask = 1 << 3;
 
+        // BTW: these gun attributes probably belong in PlayerInputs.cs (so players can have different basic weapons??)
         [SerializeField] private float gunCycleTime = 0.2f;
-
-        float spread = 3f;
+        float spread = 0f; // in degrees
 
         private void Start()
         {
@@ -44,7 +48,9 @@ namespace DavidsPrototype
             for (int i = 0; i < maxZombies; i++)
             {
                 zombieInfo.gameObjects.Add(Instantiate(zombiePrefab));
+                zombieInfo.gameObjects[i].GetComponent<ZombieInfoContainer>().index = i;
                 zombieInfo.gameObjects[i].SetActive(false);
+                zombieInfo.health.Add(zombieBaseHealth);
             }
             for (int i = 0; i < maxBasicBullets; i++)
             {
@@ -106,7 +112,7 @@ namespace DavidsPrototype
                     offset.z *= wishDirection.z;
 
                     bullet.transform.rotation = playerInfo.gameObjects[i].transform.rotation;
-                    bullet.transform.Rotate(0f, Random.Range(0f, 1f) * spread, 0f);
+                    bullet.transform.Rotate(0f, Random.Range(-1f, 1f) * spread, 0f);
                     bullet.transform.position = playerInfo.gameObjects[i].transform.position + offset;
                     bullet.SetActive(true);
                     activeBasicBullets++;
@@ -120,7 +126,22 @@ namespace DavidsPrototype
 
             for (int i = 0; i < activeBasicBullets; i++)
             {
-                basicBullets[i].transform.position += basicBulletSpeed * Time.fixedDeltaTime * basicBullets[i].transform.forward;
+                RaycastHit hit;
+                Physics.SphereCast(basicBullets[i].transform.position, bulletRadius, basicBullets[i].transform.forward, out hit, basicBulletSpeed * Time.fixedDeltaTime, enemyLayerMask);
+                if (hit.collider)
+                {
+                    int indexOfCollidedZombie = hit.collider.gameObject.GetComponent<ZombieInfoContainer>().index;
+                    zombieInfo.health[indexOfCollidedZombie] -= basicBulletDamage;
+                    if (zombieInfo.health[indexOfCollidedZombie] <= 0f)
+                    {
+                        zombieInfo.gameObjects[indexOfCollidedZombie].SetActive(false);
+                        zombieInfo.health[indexOfCollidedZombie] = zombieBaseHealth;
+                    }
+                }
+                else
+                {
+                    basicBullets[i].transform.position += basicBulletSpeed * Time.fixedDeltaTime * basicBullets[i].transform.forward;
+                }
             }
         }
         private void ProcessPlayerInput()

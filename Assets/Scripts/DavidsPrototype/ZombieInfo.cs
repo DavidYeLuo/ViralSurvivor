@@ -11,16 +11,17 @@ namespace DavidsPrototype
         public float baseMovementSpeed;
         public List<GameObject> gameObjects;
         public List<Vector3> wishDirections;
+        public List<float> health;
         public List<float> bonusSpeed;
         public ZombieInfo(int activeZombies, int maxZombies)
         {
             baseMovementSpeed = 1.0f;
-
             this.activeZombies = activeZombies;
             this.maxZombies = maxZombies;
 
             gameObjects = new List<GameObject>(maxZombies);
             wishDirections = new List<Vector3>(maxZombies);
+            health = new List<float>(maxZombies);
             bonusSpeed = new List<float>(maxZombies);
 
             for (int i = 0; i < maxZombies; i++)
