@@ -11,6 +11,8 @@ namespace DavidsPrototype
         public List<Vector3> playersWishDirection;
         public List<bool> playersWishToFire;
         public List<float> shotCooldowns;
+        public List<float> health;
+        public List<float> receiveDamageCooldown;
 
         public List<Vector3> playerHandOffset;
         public List<Vector3> weaponOffset;
@@ -35,6 +37,8 @@ namespace DavidsPrototype
             playersWishDirection = new List<Vector3>(maxPlayers);
             playersWishToFire = new List<bool>(maxPlayers);
             shotCooldowns = new List<float>(maxPlayers);
+            health = new List<float>(maxPlayers);
+            receiveDamageCooldown = new List<float>(maxPlayers);
 
             playerHandOffset = new List<Vector3>(maxPlayers);
             weaponOffset = new List<Vector3>(maxPlayers);

@@ -20,14 +20,18 @@ namespace DavidsPrototype
         [SerializeField] private int activePlayers = 1;
         [SerializeField] private int maxPlayers = 2;
         [SerializeField] private float playerBaseSpeed = 4.0f;
+        [SerializeField] private float playerBaseHealth = 10.0f;
         [SerializeField] private int activeZombies = 0;
         [SerializeField] private int maxZombies = 64;
         [SerializeField] private float zombieBaseSpeed = 1.0f;
         [SerializeField] private float zombieBaseHealth = 10.0f;
+        [SerializeField] private float zombieBaseDamage = 2.0f;
         [SerializeField] private int activeBasicBullets = 0;
         [SerializeField] private int maxBasicBullets = 512;
         float bulletRadius = 0.5f;
         int enemyLayerMask = 1 << 3;
+
+        float playerMaxDamageCooldown = 1.5f;
 
         // BTW: these gun attributes probably belong in PlayerInputs.cs (so players can have different basic weapons??)
         [SerializeField] private float gunCycleTime = 0.2f;
@@ -42,6 +46,8 @@ namespace DavidsPrototype
             {
                 playerInfo.gameObjects.Add(Instantiate(playerPrefab));
                 playerInfo.gameObjects[i].SetActive(false);
+                playerInfo.health.Add(playerBaseHealth);
+                playerInfo.receiveDamageCooldown.Add(0f);
             }
 
             zombieInfo = new ZombieInfo(activeZombies, maxZombies);
@@ -92,9 +98,38 @@ namespace DavidsPrototype
 
             for (int i = 0; i < playerInfo.activePlayers; i++)
             {
+                if (!playerInfo.gameObjects[i].activeSelf)
+                {
+                    continue;
+                }
+                if (playerInfo.receiveDamageCooldown[i] > 0f)
+                        playerInfo.receiveDamageCooldown[i] -= Time.fixedDeltaTime;
+                if (playerInfo.receiveDamageCooldown[i] <= 0f)
+                {
+                    Collider[] playerCollisions = Physics.OverlapSphere(playerInfo.gameObjects[i].transform.position, 0.6f);
+                    foreach(Collider c in playerCollisions)
+                    {
+                        if (c.tag == "Enemy")
+                        {
+                            playerInfo.health[i] -= zombieBaseDamage;
+                            print("player " + (i+1) + " took " + zombieBaseDamage + " damage");
+                            if (playerInfo.health[i] <= 0f)
+                            {
+                                // the player is now dead, we should check if all active players are dead at this point
+                                // TODO: elaborate on death handling (e.g. if(everyone is dead){gameover;} )
+                                playerInfo.gameObjects[i].SetActive(false);
+                            }
+                            playerInfo.receiveDamageCooldown[i] = playerMaxDamageCooldown;
+                            break;
+                        }
+                    }
+                }
+                
                 Vector3 wishDirection = playerInfo.playersWishDirection[i].normalized;
                 // TODO: Change this to rigidbody so player can collide to walls properly (if we're adding walls in the future)
-                playerInfo.gameObjects[i].transform.position += (playerInfo.baseMovementSpeed + playerInfo.bonusSpeed[i]) * Time.fixedDeltaTime * wishDirection;
+                // playerInfo.gameObjects[i].transform.position += (playerInfo.baseMovementSpeed + playerInfo.bonusSpeed[i]) * Time.fixedDeltaTime * wishDirection;
+                // ^^^ DONE vvv
+                playerInfo.gameObjects[i].GetComponent<Rigidbody>().velocity = (playerInfo.baseMovementSpeed + playerInfo.bonusSpeed[i]) * wishDirection;
                 // This if statement fixes prevents player model to snap back to looking forward when player isn't pressing anything
                 if (wishDirection.sqrMagnitude > 0.1f)
                     playerInfo.gameObjects[i].transform.rotation = Quaternion.LookRotation(wishDirection);
@@ -122,11 +157,15 @@ namespace DavidsPrototype
             {
                 zombieInfo.wishDirections[i] = (playerInfo.gameObjects[0].transform.position - zombieInfo.gameObjects[i].transform.position).normalized;
                 // zombieInfo.gameObjects[i].transform.position += (zombieInfo.baseMovementSpeed + zombieInfo.bonusSpeed[i]) * Time.fixedDeltaTime * zombieInfo.wishDirections[i].normalized;
+                // ^ v   replaced the movement mode so that zombies collide with each other
                 zombieInfo.gameObjects[i].GetComponent<Rigidbody>().velocity = (zombieInfo.baseMovementSpeed + zombieInfo.bonusSpeed[i]) * zombieInfo.wishDirections[i].normalized;
             }
 
             for (int i = 0; i < activeBasicBullets; i++)
             {
+                if (!basicBullets[i].activeSelf)
+                    continue;
+
                 RaycastHit hit;
                 Physics.SphereCast(basicBullets[i].transform.position, bulletRadius, basicBullets[i].transform.forward, out hit, basicBulletSpeed * Time.fixedDeltaTime, enemyLayerMask);
                 if (hit.collider)
