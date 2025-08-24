@@ -29,6 +29,11 @@ namespace DavidsPrototype
         float bulletRadius = 0.5f;
         int enemyLayerMask = 1 << 3;
 
+        [SerializeField] private int numOfZombiesSpawnAtOnce = 10; // n zombies spawns every waveDuration of seconds
+        [SerializeField] private float waveDuration = 60.0f; // seconds
+        [SerializeField] private float spawnRange = 10.0f;
+        private float nextZombieWaveSpawnInSeconds = 0.0f;
+
         // BTW: these gun attributes probably belong in PlayerInputs.cs (so players can have different basic weapons??)
         [SerializeField] private float gunCycleTime = 0.2f;
         float spread = 0f; // in degrees
@@ -118,6 +123,13 @@ namespace DavidsPrototype
                     activeBasicBullets++;
                 }
             }
+
+            if (nextZombieWaveSpawnInSeconds < 0.0f)
+            {
+                SpawnZombiesRandomly();
+                nextZombieWaveSpawnInSeconds = waveDuration;
+            }
+            nextZombieWaveSpawnInSeconds -= Time.fixedDeltaTime;
             for (int i = 0; i < zombieInfo.activeZombies; i++)
             {
                 zombieInfo.wishDirections[i] = (playerInfo.gameObjects[0].transform.position - zombieInfo.gameObjects[i].transform.position).normalized;
@@ -143,6 +155,26 @@ namespace DavidsPrototype
                 {
                     basicBullets[i].transform.position += basicBulletSpeed * Time.fixedDeltaTime * basicBullets[i].transform.forward;
                 }
+            }
+        }
+        private void SpawnZombiesRandomly()
+        {
+            for (int i = 0; i < numOfZombiesSpawnAtOnce; i++)
+            {
+                if (zombieInfo.activeZombies >= zombieInfo.maxZombies)
+                    break;
+                int index = zombieInfo.activeZombies;
+                zombieInfo.activeZombies++; // Update the zombie count
+                zombieInfo.bonusSpeed[index] = 0.0f; // Resets its speed
+                zombieInfo.health[index] = zombieBaseHealth;
+
+                float angleRad = Random.Range(0.0f, 2 * Mathf.PI);
+                float randX = spawnRange * Mathf.Cos(angleRad) + cam.transform.position.x;
+                float randY = spawnRange * Mathf.Sin(angleRad) + cam.transform.position.z;
+                Vector3 randPosition = new Vector3(randX, 0.0f, randY);
+                GameObject currentObject = zombieInfo.gameObjects[index];
+                currentObject.transform.position = randPosition;
+                currentObject.SetActive(true);
             }
         }
         private void ProcessPlayerInput()

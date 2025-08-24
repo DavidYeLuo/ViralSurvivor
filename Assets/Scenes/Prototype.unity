@@ -341,14 +341,19 @@ MonoBehaviour:
   zombiePrefab: {fileID: 2971029486163275012, guid: 5d24bde5cd4a03a6aaf88e5fc083cfe8, type: 3}
   basicBulletPrefab: {fileID: 383012508136495484, guid: 9a9b092e7d6f535109e64d21332bd9db, type: 3}
   basicBulletSpeed: 15
+  basicBulletDamage: 3
   activePlayers: 1
   maxPlayers: 64
   playerBaseSpeed: 4
-  activeZombies: 2
+  activeZombies: 0
   maxZombies: 512
   zombieBaseSpeed: 1
+  zombieBaseHealth: 10
   activeBasicBullets: 0
   maxBasicBullets: 512
+  numOfZombiesSpawnAtOnce: 5
+  waveDuration: 5
+  spawnRange: 10
   gunCycleTime: 0.2
 --- !u!4 &1316121653
 Transform:
