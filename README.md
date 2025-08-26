@@ -1,5 +1,5 @@
 # [TODO: Game Title]
-**Jam Theme:** [TODO: Jam Theme]  
+**Jam Theme:** Virus (special object: Balloon)
 **Jam Schedule:** 8/22/25 to 8/24/25  
 **jam:** [itch.io/jam/mini-jame-gam-46](https://itch.io/jam/mini-jame-gam-46)
 
@@ -9,9 +9,8 @@
 ## How to Play?
 [Instructions on how to play the game. Assume player doesn't have prior knowledge]
 **Controls:**
-* **[Key/Button]**: [Action] (e.g., "W/A/S/D or Arrow Keys: Movement")
-* **[Key/Button]**: [Action] (e.g., "Spacebar: Jump")
-* **[Key/Button]**: [Action] (e.g., "Left Click: Interact/Shoot")
+* **[W/A/S/D]**: [Movement]
+* **[J]**: [Shoot]
 
 **Gameplay Mechanics:**
 * [Explain any specific mechanics or objectives, e.g., "Collect all 5 time crystals to complete a level."]
@@ -19,12 +18,12 @@
 
 ## Credits
 * **Development:**
-    *   [Team member]
-    *   [Team member]
+    * DavidYeLuo
+    * RedTorch
 * **Art:**
-    * [Artist Names or "Self-made" or "Asset Pack Name"]
+    * Self-made
 * **Music/Sound:**
-    * [Composer/Sound Designer names or "Self-made" or "Asset Pack Name"]
+    * None
 * **Tools Used:**
     * Unity 2022.3.59f1
 
@@ -35,7 +34,7 @@
 
 ## Known Issues (Optional)
 [List any bugs or incomplete features you are aware of. This shows transparency and manages expectations.]
-* [Issue 1]
+* Player can go out-of-bounds
 * [Issue 2]
 
 ## Post-Jam Thoughts (Optional)
