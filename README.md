@@ -1,4 +1,4 @@
-# [TODO: Game Title]
+# Viral Survivor
 **Jam Theme:** Virus (special object: Balloon)
 **Jam Schedule:** 8/22/25 to 8/24/25  
 **jam:** [itch.io/jam/mini-jame-gam-46](https://itch.io/jam/mini-jame-gam-46)
