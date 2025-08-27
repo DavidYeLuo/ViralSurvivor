@@ -5,6 +5,7 @@
 
 ## Game Description
 [TODO: Description of the game. What is it about? What's the core gameplay loop? What makes it unique or interesting on the jam theme?]
+Search for lost balloons in the darkness while being hunted by large groups of zombies.
 
 ## How to Play?
 [Instructions on how to play the game. Assume player doesn't have prior knowledge]
@@ -15,6 +16,10 @@
 **Gameplay Mechanics:**
 * [Explain any specific mechanics or objectives, e.g., "Collect all 5 time crystals to complete a level."]
 * [Mention any power-ups, enemies, or unique interactions.]
+* Find and collect all (2) balloons to complete the level
+* Enemies appear from all directions in the pitch blackness
+* The player's only tools are a flashlight and a somewhat weak gun
+
 
 ## Credits
 * **Development:**
@@ -29,7 +34,7 @@
 
 ## Work in Progress
 [List any features that are in current development]
-* [Progress 1]
+* Multiplayer?
 * [Progress 2]
 
 ## Known Issues (Optional)
@@ -39,5 +44,5 @@
 
 ## Post-Jam Thoughts (Optional)
 [Reflect on your experience, what you learned, or what you might do differently in the future.]
-* [Insight 1]
+* More detailed planning (mainly specs-setting such as MP/SP)
 * [Insight 2]
