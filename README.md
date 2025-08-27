@@ -44,5 +44,5 @@ Search for lost balloons in the darkness while being hunted by large groups of z
 
 ## Post-Jam Thoughts (Optional)
 [Reflect on your experience, what you learned, or what you might do differently in the future.]
-* More detailed planning (mainly specs-setting such as MP/SP)
+* More detailed planning (mainly specs-setting such as MP/SP) while still being able to adapt to changes
 * [Insight 2]
