@@ -44,5 +44,5 @@ Search for lost balloons in the darkness while being hunted by large groups of z
 
 ## Post-Jam Thoughts (Optional)
 [Reflect on your experience, what you learned, or what you might do differently in the future.]
-* Maximizing the benefits of the planning phase while retaining flexibility
+* Plan without sacrificing flexibility/ plan with greater breadth, less depth?
 * [Insight 2]
