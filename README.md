@@ -28,7 +28,6 @@ You're trying to survive in a zombie apocalypse, and to do so, you must collect 
     * Unity 2022.3.59f1
 
 ## Known Issues
-[List any bugs or incomplete features you are aware of. This shows transparency and manages expectations.]
 * Player can go out-of-bounds
 * Win and lose screens can both show up when the player wins and then loses.
 
