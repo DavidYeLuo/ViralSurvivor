@@ -4,22 +4,17 @@
 **jam:** [itch.io/jam/mini-jame-gam-46](https://itch.io/jam/mini-jame-gam-46)
 
 ## Game Description
-[TODO: Description of the game. What is it about? What's the core gameplay loop? What makes it unique or interesting on the jam theme?]
-Search for lost balloons in the darkness while being hunted by large groups of zombies.
+You're trying to survive in a zombie apocalypse, and to do so, you must collect balloons to fly away.
 
 ## How to Play?
-[Instructions on how to play the game. Assume player doesn't have prior knowledge]
 **Controls:**
 * **[W/A/S/D]**: [Movement]
 * **[J]**: [Shoot]
 
 **Gameplay Mechanics:**
-* [Explain any specific mechanics or objectives, e.g., "Collect all 5 time crystals to complete a level."]
-* [Mention any power-ups, enemies, or unique interactions.]
 * Find and collect all (2) balloons to complete the level
 * Enemies appear from all directions in the darkness
 * The player's only tools are a flashlight and a somewhat weak gun
-
 
 ## Credits
 * **Development:**
@@ -32,17 +27,11 @@ Search for lost balloons in the darkness while being hunted by large groups of z
 * **Tools Used:**
     * Unity 2022.3.59f1
 
-## Work in Progress
-[List any features that are in current development]
-* Multiplayer?
-* [Progress 2]
-
-## Known Issues (Optional)
+## Known Issues
 [List any bugs or incomplete features you are aware of. This shows transparency and manages expectations.]
 * Player can go out-of-bounds
-* [Issue 2]
+* Win and lose screens can both show up when the player wins and then loses.
 
-## Post-Jam Thoughts (Optional)
-[Reflect on your experience, what you learned, or what you might do differently in the future.]
+## Post-Jam Thoughts
 * Plan without sacrificing flexibility/ plan with greater breadth, less depth?
-* [Insight 2]
+* This game jam, we've tried learning data-oriented design, which led to cramming all logic into one file. Turns out it is easier to follow than OOP approach. It was slightly slower to develop, but the development process is something I want to try out more. Overall, it worked out pretty well for a small game jam. 
